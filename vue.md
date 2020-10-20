@@ -1106,11 +1106,13 @@ export default {
     在前端开发过程中，有后台配合是很必要的。但是如果自己测试开发，或者后台很忙，没时间，那么我们需要自己提供或修改接口。
 
     npm install --save mockjs  //在项目根目录下下载
-在src文件夹下创建相关文件与文件夹
+>在src文件夹下创建相关文件与文件夹
 ![](img/mock1.png)
-设置请求文件index.js
+
+>设置请求文件index.js
 ![](img/mock2.png)
-引用mock在main.js
+
+>引用mock在main.js
 ![](img\mock3.png)
 
 
