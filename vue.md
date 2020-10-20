@@ -1111,7 +1111,7 @@ export default {
 设置请求文件index.js
 ![](img/mock2.png)
 引用mock在main.js
-![](img/mock3.png)
+![](img\mock3.png)
 
 
 
