@@ -1005,7 +1005,7 @@ css预编译器：
 选择Babel PostCSS ESlint等配置文件的存放位置：
 ![](img/4安装8.png)
 是否保存选择的配置：
-![](img/4安装9.png)
+![](./img/4安装9.png)
 
 cd 项目名
 npm run serve
