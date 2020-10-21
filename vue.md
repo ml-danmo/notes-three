@@ -1010,7 +1010,7 @@ css预编译器：
 cd 项目名
 npm run serve
 
-
+---
 安装成功界面：
 ![](img/4安装10.png)
 #### 2.x、4.x的差异
@@ -1115,8 +1115,74 @@ export default {
 >引用mock在main.js
 ![](img\mock3.png)
 
+---
+## 路由配置
+##### 路由的作用
+    路由：所有的路径都经由这个模块进行重新分配（改变URL，在不重新请求页面的情况下，更新页面视图。）
+    根据 url 锚点路径，在容器中加载不同的模块
+    完成 SPA（单页面应用）的开发
+##### 路由原理
+    利用锚点完成切换
+    页面不会刷新
+
+#### 路由
+    用 Vue.js + Vue Router 创建单页面应用，是非常简单的。将组件 (components) 映射到路由 (routes)，然后告诉 Vue Router 在哪里渲染它们。
+1. 定义 (路由) 组件。
+![](img\路由1.png)
+    注意：可以使用template模板进行html封装，调用id属性更加方便
+![](img\路由2.png)
+2. 定义路由
+使用component来进行路由映射组件。name属性是命名路由通过一个名称来标识一个路由
+![](img\路由3.png)
+ 3. 创建 router 实例，然后传 `routes` 配置
+![](img\路由4.png)
+4. 创建和挂载根实例。
+通过 router 配置参数注入路由，从而让整个应用都有路由功能
+![](img\路由5.png)
+
+---
+    使用<router-link to=“/url”></router-link>标签设置路由跳转       
+    to属性用来设置跳转链接
+    路由出口:<router-view></router-view>表明路由模版显示的位置
+
+# 没写完！！！！！
+```html
+vue create 名字
+
+删除components和views下自带的文件，
+```
 
 
+##### js跳转
+    使用this.$touter全局路由的push()方法进行路由跳转
+![](img\路由js跳转.png)
+---
+    当 <router-link> 对应的路由匹配成功，将自动设置 class 属性值 .router-link-active。
+    通过自动设置的类名方便进行路由导航样式设置
+---
+    常规参数只会匹配被 / 分隔的 URL 片段中的字符。如果想匹配任意路径，我们可以使用通配符 (*)
+    {name:"tema",path:"*",component:tema}
+
+    匹配任意开头的路径使用通配符（*） 
+    {name:"tema",path:"/demo-*",component:tema}
+
+    当使用通配符路由时，请确保路由的顺序是正确的，也就是说含有通配符的路由应该放在最后。路由 { path: '*' } 通常用于客户端 404 错误。
+
+    同一个路径可以匹配多个路由，此时，匹配的优先级就按照路由的定义顺序：
+    谁先定义的，谁的优先级就最高。
+##### 编程式导航  ::使用js方式进行跳转路由
+##### 声明式 :: 使用router-link进行跳转路由
+扩展路由跳转方式：
+
+    router.replace（）替换
+
+    与push（）唯一的不同就是，它不会向 历史url记录中添加新记录，
+    而是跟它的方法名一样 —— 替换掉当前的 history 记录。
+---
+this.$router.go(n)这个方法的参数是一个整数，意思是在 history 记录中向前或者后退多少步，类似 window.history.go(n)。
+![](img\go.png)
+
+### 动态路由匹配
 
 
 
