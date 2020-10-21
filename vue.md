@@ -856,6 +856,22 @@ Vue.component(‘name’, {
 
     HTML 中：
         <组件 message=‘val’mess-age2='val'></组件>
+
+###### props 的使用
+    与 data 一样，props 可以用在模板中
+    可以在 vm 实例中像 this.message 这样使用
+##### props 验证
+    我们可以为组件的 prop 指定验证要求，例如知道的这些数据的类型。
+
+    为了定制 prop 的验证方式，你可以为 props 中的值提供一个带有验证需求的对象，而不是一个字符串数组。
+![](img/props验证.png)
+##### props 验证常见问题
+为什么写的没有错但是没有错误提示？
+
+    生产版本也就是压缩版的文件删除了警告，
+    所以使用非压缩版的js文件就可以看到错误
+
+---
 ```js
     <!-- props   完成正向传值      父亲给儿子数据 -->
     <!-- props的作用就是用来接收组件外部传递进来的数据    -->
@@ -920,6 +936,25 @@ Vue.component(‘name’, {
             }
         })
 ```
+## slot（槽口） 
+##### slot的作用
+    用来混合父组件的内容与子组件自己的模板
+##### slot 的使用
+  语法：
+> 声明组件模板：定义组件的时候留下slot等待调用的时候插入内容
+>> ![](img/slot的使用.png)
+
+> 调用组件模板：调用的时候直接插入
+>> ![](img/slot的使用1.png)
+
+##### 具名 slot
+    <slot> 元素可以用一个特殊属性 name 来配置如何分发内容
+
+    多个slot可以有不同的名字
+
+    具名slot将匹配内容片段中有对应slot特性的元素
+
+
 #### 8.父子组件
     子组件声明的位置  是在父组件之内
     注意：子组件在哪里调用呢？
@@ -1145,11 +1180,49 @@ export default {
     to属性用来设置跳转链接
     路由出口:<router-view></router-view>表明路由模版显示的位置
 
+
 # 没写完！！！！！
-```html
+```js
 vue create 名字
 
-删除components和views下自带的文件，
+删除components和views下自带的文件，app.vue中删除（自带配置）
+
+创建api和mock文件夹
+
+在views文件夹下 创建一级路由页面：创建模板
+        <template>
+            <div>
+                购物车
+            </div>
+        </template>
+
+在router下的index.js中引进并配置路由
+        import Vue from 'vue'
+        import VueRouter from 'vue-router'
+
+        import Cart from '@/views/cart.vue';
+
+        Vue.use(VueRouter)
+
+        const routes = [
+            {
+                path: '/cart',
+                name: 'Cart',
+                component: Cart
+            },
+            //重定向
+            //404页面
+        ]
+
+main.js中配置路由：
+        new Vue({
+            router,
+            render: h => h(App)
+        }).$mount('#app')
+
+
+app.vue:写导航
+
 ```
 
 
@@ -1158,6 +1231,7 @@ vue create 名字
 ![](img\路由js跳转.png)
 ---
     当 <router-link> 对应的路由匹配成功，将自动设置 class 属性值 .router-link-active。
+
     通过自动设置的类名方便进行路由导航样式设置
 ---
     常规参数只会匹配被 / 分隔的 URL 片段中的字符。如果想匹配任意路径，我们可以使用通配符 (*)
@@ -1167,11 +1241,13 @@ vue create 名字
     {name:"tema",path:"/demo-*",component:tema}
 
     当使用通配符路由时，请确保路由的顺序是正确的，也就是说含有通配符的路由应该放在最后。路由 { path: '*' } 通常用于客户端 404 错误。
-
+##### 路由匹配优先级
     同一个路径可以匹配多个路由，此时，匹配的优先级就按照路由的定义顺序：
     谁先定义的，谁的优先级就最高。
-##### 编程式导航  ::使用js方式进行跳转路由
-##### 声明式 :: 使用router-link进行跳转路由
+##### 编程式导航---->使用js方式进行跳转路由
+    router.replace()
+##### 声明式 ----> 使用router-link进行跳转路由
+    <router-link :to=" " replace>
 扩展路由跳转方式：
 
     router.replace（）替换
@@ -1182,9 +1258,27 @@ vue create 名字
 this.$router.go(n)这个方法的参数是一个整数，意思是在 history 记录中向前或者后退多少步，类似 window.history.go(n)。
 ![](img\go.png)
 
-### 动态路由匹配
+### 动态路由匹配  (路由传参)
+    动态路由也可以叫做路由传参
+    组件的显示内容经常会根据用户选择的内容不同来在同一个组件中渲染不同内容。
+    那么在这个时候就需要动态路由
+##### 动态路径参数
+    使用动态路由匹配中的 动态路径参数来进行路由配置。
+    注意：动态路径参数 以冒号：开头
+![](img/动态路径参数.png)
 
+##### 绑定参数
+路由导航绑定参数的两种方式 但是注意 params只能通过路由配置中的name属性来引用路由
+![](img/绑定参数1.png)
 
+js方式进行参数绑定
+![](img/绑定参数2.png)
 
+##### 获取路由传入参数
+如果想得到路径参数那么使用$route.params.id
+![](img/获取路由传入参数1.png)
+
+或者是使用this实例中的this.$route.params.id进行调用
+![](img/获取路由传入参数2.png)
 
 
