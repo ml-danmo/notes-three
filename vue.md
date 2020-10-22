@@ -98,7 +98,9 @@
     指令是带有 v- 前缀的特殊属性
 <!-- ![](img/Vue指令.png) -->
  <img src="img/Vue指令.png" height="200px">
-#### Vue.js 指令的用途
+ ---
+
+####  Vue.js 指令的用途
     它们作用于HTML元素，指令提供了一些特殊的特性，将指令绑定在元素上时，指令会为绑定的目标元素添加一些特殊的行为，我们可以将指令看作特殊的HTML属性（attribute）。
 #### Vue.js 指令的书写规范
     书写位置：任意 HTML 元素的开始标签内
@@ -870,7 +872,9 @@ Vue.component(‘name’, {
     我们可以为组件的 prop 指定验证要求，例如知道的这些数据的类型。
 
     为了定制 prop 的验证方式，你可以为 props 中的值提供一个带有验证需求的对象，而不是一个字符串数组。
-![](img/props验证.png)
+<!-- ![](img/props验证.png) -->
+<img src="img/props验证.png" width="400px">
+
 ##### props 验证常见问题
 为什么写的没有错但是没有错误提示？
 
@@ -948,10 +952,12 @@ Vue.component(‘name’, {
 ##### slot 的使用
   语法：
 > 声明组件模板：定义组件的时候留下slot等待调用的时候插入内容
->> ![](img/slot的使用.png)
+<!-- >> ![](img/slot的使用.png) -->
+<img src="img/slot的使用.png" width="300px">
 
 > 调用组件模板：调用的时候直接插入
->> ![](img/slot的使用1.png)
+>><img src="img/slot的使用.png" width="300px">
+<!-- >> ![](img/slot的使用1.png) -->
 
 ##### 具名 slot
     <slot> 元素可以用一个特殊属性 name 来配置如何分发内容
@@ -1034,7 +1040,9 @@ components:{                    //父组件
 配置方式：
 ![](img/4安装2.png)
 项目需要什么东西：
-![](img/4安装3.png)
+<!-- ![](img/4安装3.png) -->
+<img src="./img/4安装3.png" width="500px" >
+
 路由是采用history模式：
 ![](img/4安装4.png)
 css预编译器：
@@ -1047,20 +1055,25 @@ css预编译器：
 ![](img/4安装8.png)
 是否保存选择的配置：
 ![](./img/4安装9.png)
+<img src="./img/4安装9.png" width="500px" >
+
 
 cd 项目名
 npm run serve
 
 ---
 安装成功界面：
-![](img/4安装10.png)
+<!-- ![](img/4安装10.png) -->
+<img src="./img/4安装10.png" width="200px" >
+
 #### 2.x、4.x的差异
 2X:![alt 2](img/2.4的差异1.png) 4X: ![4](img/2.4的差异2.png)
 
 ---
 #### vue-cli 配置端口 自动开启  热更新
 在项目的根路径下根路径下根路径下根路径下创建一个文件名为vue.config.js
-![4](img/热更新.png)
+<!-- ![4](img/热更新.png) -->
+<img src="./img/热更新.png" width="300px" >
 
 ### 单文件组件
 ##### 通过一个.vue为后缀的文件来完成一个组件的封装
@@ -1303,7 +1316,9 @@ export default {
     而是跟它的方法名一样 —— 替换掉当前的 history 记录。
 ---
 this.$router.go(n)这个方法的参数是一个整数，意思是在 history 记录中向前或者后退多少步，类似 window.history.go(n)。
-![](img\go.png)
+
+<!-- ![](img/go.png) -->
+<img src="./img/go.png" width="400px" >
 
 ### 动态路由匹配  (路由传参)
     动态路由也可以叫做路由传参
@@ -1319,7 +1334,8 @@ this.$router.go(n)这个方法的参数是一个整数，意思是在 history �
 ![](img/绑定参数1.png)
 
 js方式进行参数绑定
-![](img/绑定参数2.png)
+<!-- ![](img/绑定参数2.png) -->
+<img src="./img/绑定参数2.png" width="400px" >
 
 ##### 获取路由传入参数
 如果想得到路径参数那么使用$route.params.id
@@ -1334,10 +1350,12 @@ js方式进行参数绑定
 
 
 2. 路由导航绑定参数的方式
-![](img/query传参2.png)
+<!-- ![](img/query传参2.png) -->
+<img src="./img/query传参2.png" width="400px" >
 
 3. js方式进行参数绑定
-![](img/query传参3.png)
+<!-- ![](img/query传参3.png) -->
+<img src="./img/query传参3.png" width="400px" height="100px">
 
 
 
@@ -1513,6 +1531,7 @@ configureWebpack:{
 ##### 在src文件夹下创建一个util（工具文件夹）。把一些工具类的js文件进行统一管理
 <!-- ![alt util](img/util1.png) -->
 <img src="./img/util1.png" height="200px">
+
 ##### 在需要的位置引用使用
 ![alt util](img/util2.png)
 
@@ -1520,9 +1539,12 @@ configureWebpack:{
 ##### axios模块
 <!-- ![alt util](img/axios模块.png) -->
 <img src="./img/axios模块.png" height="200px">
+
 ##### axios请求封装原理
 <img src="./img/axios模块.png" height="200px">
 <!-- ![alt util](img/axios请求封装原理.png) -->
+
+
 ##### axios拦截器类型
     1. 请求拦截器
         请求拦截器的作用是在请求发送前进行一些操作，
@@ -1568,7 +1590,7 @@ service.interceptors.response.use(function (response) {
 3. 在页面中引用之后查看请求情况
 ![alt axios拦截器.png](img/拦截器测试2.png)
 
-
+---
 ### axios封装
 1. 在api文件夹的对应文件中引用拦截器文件
 ![alt 封装请求.png](img/封装请求1.png)
@@ -1576,13 +1598,6 @@ service.interceptors.response.use(function (response) {
 <!-- ![alt 封装请求.png](img/封装请求2.png) -->
 <img src="./img/封装请求2.png" height="200px">
 
-
 3. 在需要的地方引用调用请求
 <img src="./img/封装请求3.png" height="200px">
 <!-- ![alt 封装请求.png](img/封装请求3.png) -->
-
-
-
-
-
-
