@@ -1181,22 +1181,48 @@ export default {
     路由出口:<router-view></router-view>表明路由模版显示的位置
 
 
-# 没写完！！！！！
+# 一个路由项目的搭建示例！！！
 ```js
-vue create 名字
+#vue create 名字
 
-删除components和views下自带的文件，app.vue中删除（自带配置）
+#删除components和views下自带的文件，app.vue文件中删除（自带配置）
 
-创建api和mock文件夹
+#创建api和mock文件夹：
 
-在views文件夹下 创建一级路由页面：创建模板
+    ##mock文件夹下的index.js中配置：
+
+        let Mock = require("mockjs");
+        Mock.mock("wode/data","get",require("./data/wode.json"))
+    
+    ##main.js中配置：
+
+        require("./mock")
+
+    ##api/api.js利用axios发送数据
+
+        import axios from "axios";
+        export function jump(){
+            return new Promise((resolve,reject)=>{
+                axios({
+                    url:"wode/data",
+                    methods:"get"
+                }).then(res=>{
+                    resolve(res)
+                }).catch(rej=>{
+                    reject(rej)
+                })
+            })
+        }
+
+
+#在views文件夹下 创建一级路由页面：创建模板
         <template>
             <div>
                 购物车
             </div>
         </template>
 
-在router下的index.js中引进并配置路由
+#在router下的index.js中引进并配置路由规则
         import Vue from 'vue'
         import VueRouter from 'vue-router'
 
@@ -1210,18 +1236,33 @@ vue create 名字
                 name: 'Cart',
                 component: Cart
             },
-            //重定向
-            //404页面
+            {                //重定向
+                path: '/',
+                redirect:"/index"
+            },
+            {                   //404页面
+                path: '*',
+                name: 'No',
+                component: No
+            }
+           
+            
         ]
 
-main.js中配置路由：
+#main.js中配置路由：
         new Vue({
             router,
             render: h => h(App)
         }).$mount('#app')
 
 
-app.vue:写导航
+#app.vue:写导航
+
+    <router-link to="/index">  index  </router-link>
+    <router-link to="/cart">  cart  </router-link>
+    <router-link to="/wode">  wode  </router-link>
+
+    <router-view/>  //路由出口
 
 ```
 
@@ -1281,4 +1322,84 @@ js方式进行参数绑定
 或者是使用this实例中的this.$route.params.id进行调用
 ![](img/获取路由传入参数2.png)
 
+##### 绑定参数 和 获取路由传入参数（示例）
+```html
+***绑定参数
+<router-link to="/wode/ding">  ding  </router-link>
+<router-link to="/wode/gou">  gou  </router-link>
+<ul>
+    <li v-for="(v,i) in arr" :key="i">
+        <p>
+            <router-link :to="{name:'all',params:{title:v.content}}">{{v.title}}</router-link>
+        </p>
+    </li>
+</ul>
 
+<router-view></router-view>
+
+
+***把数据带到详情页 :  获取路由传入参数
+<template>
+    <div>
+        <button @click="fun()">👈</button>
+        <p>{{this.$route.params.title}}</p>
+    </div>
+</template>
+
+<script>
+export default {
+    methods: {
+        fun(){
+            this.$router.go(-1)
+        }
+    },
+}
+</script>
+```
+
+## 嵌套路由
+##### 嵌套路由的配置
+    实际生活中的应用界面，通常由多层嵌套的组件组合而成。同样地，URL 中各段动态路径也按某种结构对应嵌套的各层组件
+
+配置二级路由路径参数中使用 children 配置
+[](img/嵌套路由.png)
+
+```js
+{
+    path: '/cart',          //一级
+    name: 'cart',
+    component: cart,
+
+配置二级路由：
+
+ (一)二级路由中路径不加 /
+
+    1.在父组件中设置路由出口:  router-view
+    2.由于我们没有加 /  ,所以在路由导航的时候应该是：  /一级路由/二级路由
+
+    children:[                  //二级
+      {path:"ding",name:"ding",component:ding},
+      {path:"gou",name:"gou",component:gou}
+    ]
+
+
+ (二)二级路由路径中加 /
+
+    1.在父组件中设置路由出口  router-view
+    2.由于我们加了/  ，所以在路由导航的时候应该是：  /二级路由
+
+    children:[
+      {path:"/ding",name:"ding",component:ding},
+      {path:"/gou",name:"gou",component:gou}
+    ]
+},
+```
+
+### 路由重定向
+重定向也是通过 routes 中的redirect属性配置来完成
+```js
+{
+    path: '/',
+    redirect:"/index"    // 重定向  重新定位方向
+},
+```
