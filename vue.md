@@ -72,7 +72,8 @@
     3、 VM：V与M沟通的桥梁，负责监听M或者V的修改，是实现MVVM双向绑定的要点；因此开发者只需关注业务逻辑，不需要手动操作DOM, 不需要关注数据状态的同步问题，复杂的数据状态维护完全由 MVVM 来统一管理。
 
 1. MVVM思想关系图
-![alt 'MVVM思想关系图'](img/MVVM思想关系图.png)
+<!-- ![alt 'MVVM思想关系图'](img/MVVM思想关系图.png) -->
+<img src="img/MVVM思想关系图.png" height="300px">
 
 #### Vue声明式渲染
     Vue.js 的核心是一个允许采用简洁的模板语法来声明式的将数据渲染进 DOM，也就是将模板中的文本数据写进DOM中
@@ -83,17 +84,20 @@
 
 #### Vue数据驱动
     通过控制数据的变化来显示vue的数据驱动是视图的内容随着数据的改变而改变
-![](img/Vue数据驱动.png)
+<!-- ![](img/Vue数据驱动.png) -->
+<img src="img/Vue数据驱动.png" height="200px">
 
 #### Vue渲染方式
 > {{}}--表达式 --------  双大括号语法-------也叫模板语法
 >> 将双大括号中的数据替换成对应属性值进行响应式的展示
->> ![](img/双大括号语法.png)
+>> <img src="img/双大括号语法.png" height="200px">
+<!-- >> ![](img/双大括号语法.png) -->
 
 ## Vue.js 指令
 #### 什么是 Vue.js 指令
     指令是带有 v- 前缀的特殊属性
-![](img/Vue指令.png)
+<!-- ![](img/Vue指令.png) -->
+ <img src="img/Vue指令.png" height="200px">
 #### Vue.js 指令的用途
     它们作用于HTML元素，指令提供了一些特殊的特性，将指令绑定在元素上时，指令会为绑定的目标元素添加一些特殊的行为，我们可以将指令看作特殊的HTML属性（attribute）。
 #### Vue.js 指令的书写规范
@@ -142,14 +146,16 @@
             vue数据双向绑定是通过数据劫持结合发布者-订阅者模式的方式来实现的
             数据劫持:当我们访问或设置对象的属性的时候，都会触发Object.defineProperty()函数来拦截（劫持），然后在返回(get)或设置(set)对象的属性的值。并且当数据发生改变的时候做出反应。
 
-![](img/数据劫持.png)
+<!-- ![](img/数据劫持.png) -->
+<img src="./img/数据劫持.png" height="300px">
 
 > 双向绑定--原理发布者-订阅者模式
 >> vue数据双向绑定是通过数据劫持结合发布者-订阅者模式的方式来实现的
 
 >>发布者-订阅者模式:其定义对象间一种一对多的依赖关系，当一个对象的状态发生改变时，所有依赖于它的对象都将得到通知。
 
-![](img/发布者-订阅者模式.png)
+<!-- ![](img/发布者-订阅者模式.png) -->
+<img src="./img/发布者-订阅者模式.png" height="200px">
 
 ##### v-show 指令:元素的显示和隐藏
     作用：控制切换一个元素的显示和隐藏
@@ -1322,7 +1328,42 @@ js方式进行参数绑定
 或者是使用this实例中的this.$route.params.id进行调用
 ![](img/获取路由传入参数2.png)
 
+#### 动态路由--query传参
+1. 路由参数不需要添加内容 
+![](img/query传参1.png)
+
+
+2. 路由导航绑定参数的方式
+![](img/query传参2.png)
+
+3. js方式进行参数绑定
+![](img/query传参3.png)
+
+
+
+##### params与query区别
+    用法上的：
+
+        query要用path来引入，params要用name来引入，接收参数都是类似的，
+        分别   是this.$route.query.name和this.$route.params.name。
+
+    url展示上的:
+
+        params类似于post，query更加类似于我们ajax中get传参，说的再简单一点，
+        前者在浏览器地址栏中不显示参数，后者显示，所以params传值相对安全一些。
+
+#####  \$router 和 $route的区别
+    $router是VueRouter的一个对象，router的实例对象，
+    这个对象中是一个全局的对象，他包含了所有的路由包含了许多关键的对象和属性。
+    
+    举例：history对象
+
+    $route是一个跳转的路由对象，每一个路由都会有一个route对象，是一个局部的对象，
+    可以获取对应的name,path,params,query等
+
+
 ##### 绑定参数 和 获取路由传入参数（示例）
+
 ```html
 ***绑定参数
 <router-link to="/wode/ding">  ding  </router-link>
@@ -1356,6 +1397,71 @@ export default {
 }
 </script>
 ```
+### hash模式-history模式
+##### 1. hash模式
+    hash模式url里面永远带着#号，我们在开发当中默认使用这个模式。
+
+##### 2. history模式
+```html
+history模式没有#号，是个正常的url适合推广宣传。
+
+考虑url的规范那么就需要使用history模式，因为当然其功能也有区别，
+在开发app的时候有分享页面，这个分享出去的页面就是用vue做的，把这个页面分享到第三方的app里，
+有的app里面url是不允许带有#号的，所以要将#号去除那么就要使用history模式，
+history模式还有一个问题就是，做刷新操作，会出现404错误，
+那么就需要和后端人配合让他配置一下apache或是nginx的url重定向，重定向到你的首页路由上。
+
+```
+>history模式使用
+>>![](img/history模式使用.png)
+
+##### history模式与hash模式区别
+![](img/history模式与hash模式区别.png)
+
+
+## 路由懒加载
+
+    懒加载简单来说就是延迟加载或按需加载，即在需要的时候的时候进行加载。
+
+    为给客户更好的客户体验，首屏组件加载速度更快，解决白屏问题。做的一些项目越来越大。
+    vue打包后的js文件也越来越大，这会是影响加载时间的重要因素。
+    当构建的项目比较大的时候，懒加载可以分割代码块，提高页面的初始加载效率
+
+    常用的懒加载方式有两种：即使用vue异步组件懒加载 和 ES中的import
+##### 1. ES 提出的import(推荐使用)
+```js
+const HelloWorld = （）=>import('需要加载的模块地址')
+
+```
+##### 2. vue异步组件懒加载-- resolve
+```js
+主要是使用了Promise.resolve()的异步机制，用require代替了import,实现按需加载
+
+component：resolve=>(require(["引用的组件路径"],resolve))
+```
+    promise是什么？
+    
+        Promise是一种异步操作的解决方案，将写法复杂的传统的回调函数和监听事件的异步操作，
+        用同步代码的形式表达出来。避免了多级异步操作的回调函数嵌套。
+
+        1、主要用于异步计算
+        2、可以将异步操作队列化，按照期望的顺序执行，返回符合预期的结果
+        3、可以在对象之间传递和操作promise，帮助我们处理队列
+---
+### 配置解析别名---修改文件夹引用别名
+```js
+第一个参数：是你设置的别名  第二个参数：所指向的路径
+configureWebpack:{
+            resolve:{
+                alias:{
+                    // "别名":"对应的文件夹"
+                    "com":"@/components"
+                }
+            }
+}
+```
+<!-- ![](img/配置解析别名.png) -->
+<img src="./img/配置解析别名.png" height="200px">
 
 ## 嵌套路由
 ##### 嵌套路由的配置
@@ -1403,3 +1509,80 @@ export default {
     redirect:"/index"    // 重定向  重新定位方向
 },
 ```
+# 封装工具库
+##### 在src文件夹下创建一个util（工具文件夹）。把一些工具类的js文件进行统一管理
+<!-- ![alt util](img/util1.png) -->
+<img src="./img/util1.png" height="200px">
+##### 在需要的位置引用使用
+![alt util](img/util2.png)
+
+## axios拦截器
+##### axios模块
+<!-- ![alt util](img/axios模块.png) -->
+<img src="./img/axios模块.png" height="200px">
+##### axios请求封装原理
+<img src="./img/axios模块.png" height="200px">
+<!-- ![alt util](img/axios请求封装原理.png) -->
+##### axios拦截器类型
+    1. 请求拦截器
+        请求拦截器的作用是在请求发送前进行一些操作，
+        例如在每个请求体里加上token，统一做了处理如果以后要改也非常容易。
+    2. 响应拦截器
+        响应拦截器的作用是在接收到响应后进行一些操作
+        ，例如在服务器返回登录状态失效，需要重新登录的时候，跳转到登录页。
+## *** axios拦截器初体验
+1. 在util工具文件夹中创建request.js文件用来编写拦截器。
+```js
+
+import axios from "axios"
+// 创建axios 赋值给常量service 
+const service = axios.create();
+
+// 添加请求拦截器（Interceptors）
+service.interceptors.request.use(function (config) {
+    // 发送请求之前做写什么
+    return config;
+  }, function (error) {
+    // 请求错误的时候做些什么
+    return Promise.reject(error);
+  });
+
+// 添加响应拦截器
+service.interceptors.response.use(function (response) {
+    // 对响应数据做点什么
+    return response;
+  }, function (error) {
+    // 对响应错误做点什么
+    return Promise.reject(error);
+  });
+  export default service
+
+```
+<!-- ![alt axios拦截器.png](img/axios拦截器.png) -->
+<img src="./img/axios拦截器.png" height="400px">
+
+2. 在拦截器文件进行测试
+<!-- ![alt axios拦截器.png](img/拦截器测试1.png) -->
+<img src="./img/拦截器测试1.png" height="300px">
+
+3. 在页面中引用之后查看请求情况
+![alt axios拦截器.png](img/拦截器测试2.png)
+
+
+### axios封装
+1. 在api文件夹的对应文件中引用拦截器文件
+![alt 封装请求.png](img/封装请求1.png)
+2. 在封装请求文件中编写并暴漏
+<!-- ![alt 封装请求.png](img/封装请求2.png) -->
+<img src="./img/封装请求2.png" height="200px">
+
+
+3. 在需要的地方引用调用请求
+<img src="./img/封装请求3.png" height="200px">
+<!-- ![alt 封装请求.png](img/封装请求3.png) -->
+
+
+
+
+
+
