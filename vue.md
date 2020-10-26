@@ -866,9 +866,13 @@ Vue.component(‘name’, {
         <组件 message=‘val’mess-age2='val'></组件>
 
 ###### props 的使用
+
+
     与 data 一样，props 可以用在模板中
     可以在 vm 实例中像 this.message 这样使用
 ##### props 验证
+    仅仅只会在控制台抛出警告，但不会对程序造成影响，原因是prop验证是给程序员在开发的时候看的
+
     我们可以为组件的 prop 指定验证要求，例如知道的这些数据的类型。
 
     为了定制 prop 的验证方式，你可以为 props 中的值提供一个带有验证需求的对象，而不是一个字符串数组。
@@ -946,9 +950,14 @@ Vue.component(‘name’, {
             }
         })
 ```
+
+
+
 ## slot（槽口） 
 ##### slot的作用
     用来混合父组件的内容与子组件自己的模板
+
+    数量不同，内容也不同的时候建议使用
 ##### slot 的使用
   语法：
 > 声明组件模板：定义组件的时候留下slot等待调用的时候插入内容
@@ -959,6 +968,29 @@ Vue.component(‘name’, {
 >><img src="img/slot的使用.png" width="300px">
 <!-- >> ![](img/slot的使用1.png) -->
 
+示例：
+```html
+子组件：
+    <template>
+        <div>
+            vfd
+            <slot></slot>     //使用slot
+        </div>
+    </template>
+
+父组件：
+    <template>
+        <div>
+            <aa>
+                <h3>jdsvdvlmlkm</h3>    //标签不显示，
+                <h3>jdsvdvlmlkm</h3>    //可当使用了slot，页面就会加载显示自定义标签中的标签
+            </aa>
+        </div>
+</template>
+import aa from 'a.vue'，（引入，调用，使用）
+
+```
+
 ##### 具名 slot
     <slot> 元素可以用一个特殊属性 name 来配置如何分发内容
 
@@ -966,7 +998,56 @@ Vue.component(‘name’, {
 
     具名slot将匹配内容片段中有对应slot特性的元素
 
+示例：
+```html
+子组件：
+    <template>
+        <div>
+            vfd
+            <slot name="s"></slot>    ///有name具名的 slot
+            <slot name="ww"></slot>    ///有name具名的 slot
+        </div>
+    </template>
 
+父组件：
+    <template>
+        <div>
+            <aa>
+                hdfdjfbfsbb   
+                <h3 slot="s">egrtrhtr</h3>      //有相对slot具名的 标签会添加
+                <h3>jdsv3453dvlmlkm</h3>       //bo     
+                <h3 slot="ww">354636</h3>       // y
+                <h3>jdsvdvlmlkm</h3>            //n
+            </aa>
+        </div>
+</template>
+import aa from 'a.vue'，（引入，调用，使用）
+```
+案例：
+```html
+子组件：
+    <template>
+        <div class="slo">
+            <div class="title">
+                <slot name="title"></slot>
+            </div>
+            <div class="info">
+                <slot name="info"></slot>
+            </div>
+        </div>
+    </template>
+
+父组件：
+     <aa>
+        <div slot="title">我是title</div>
+    </aa>
+    <aa>
+        <div slot="title">我是title2</div>
+        <p slot="info">我是info2</p>
+    </aa>
+```
+![](img/slot.png)
+---
 #### 8.父子组件
     子组件声明的位置  是在父组件之内
     注意：子组件在哪里调用呢？
@@ -998,6 +1079,74 @@ components:{                    //父组件
                 }
             }
 ```
+---
+#### 自定义事件（***逆向传值）
+##### 父子组件中传值
+    父子组件间作用域相互独立所以没有办法直接调用，必须借助于自定义事件来进行传值
+
+    子组件传值给父组件叫 <逆向传值> （是不允许的 必须要有事件触发才能传值）
+
+    父组件传值给子组件叫 <正向传值> （不需要事件触发）
+
+```js
+1.抛出自定义事件监听
+
+    要传值必须要先抛出，在接收
+    语法：
+        this.$emit(‘event’,val)   //event：自定义事件名称  val：通过自定义事件传递的值(可选)
+
+    $emit：实例方法，用来触发事件监听
+
+2.接收自定义事件监听
+
+    语法：
+        <component @抛出的事件名=‘函数不加（）不加（）’></component>
+
+        fn:function(val){   //val:自定义事件传递出的值
+        }
+```
+示例：
+```html
+子组件：
+    <template> 
+        <div>
+            <!-- 逆向传值必须必须必须必须要使用事件来触发 -->
+            <button @click="fun()">点我进行逆向传值</button>
+        </div>
+    </template>
+    <script>
+    export default {
+        methods:{
+            fun(){
+                // 1.事件触发一个函数
+                // 2.使用$emit来创建一个自定义事件   并且在其中传递要逆向传值的数据
+                this.$emit("xiaoming",this.zitext)
+                // 3.在子组件被调用的时候
+            }
+        },
+        data(){
+            return{
+                zitext:"我是子组件的数据"
+            }
+        },
+    }
+    </script>
+
+父组件：
+
+    <!-- 3.在子组件被d调用的时候   使用@自定义事件名  =“父组件的函数  但是不加()不加()不加()” -->
+   <Home v-bind:hometext="text" @xiaoming="fun"/>   //调用子组件
+
+   methods:{
+        // 4.定义一个函数来接收子组件传递过来的数据  形参就是子组件传递的数据会自动穿入
+        fun(val){
+            console.log("我是父组件"+val)
+            this.num=val
+        }
+  }
+
+```
+
 ---
 ## 项目环境配置
 #### 2.0vue-cli项目环境配置 (**了解)
@@ -1201,23 +1350,24 @@ export default {
 
 
 # 一个路由项目的搭建示例！！！
+
 ```js
-#vue create 名字
+vue create 名字
 
-#删除components和views下自带的文件，app.vue文件中删除（自带配置）
+删除components和views下自带的文件，app.vue文件中删除（自带配置）
 
-#创建api和mock文件夹：
+创建api和mock文件夹：
 
     ##mock文件夹下的index.js中配置：
 
         let Mock = require("mockjs");
         Mock.mock("wode/data","get",require("./data/wode.json"))
     
-    ##main.js中配置：
+    *##main.js中配置：
 
         require("./mock")
 
-    ##api/api.js利用axios发送数据
+    *##api/api.js利用axios发送数据
 
         import axios from "axios";
         export function jump(){
@@ -1234,14 +1384,33 @@ export default {
         }
 
 
-#在views文件夹下 创建一级路由页面：创建模板
+在项目的根目录下创建vue.config.js 
+    配置自动打开:
+        module.exports={
+            devServer:{
+                open:true,
+                port:8888
+            }
+        }
+
+    配置解析别名：
+        configureWebpack:{
+            resolve:{
+                alias:{
+                    //"别名"："对应的文件夹"
+                    "com":"@/components"
+                }
+            }
+        }
+
+在views文件夹下 创建一级路由页面：创建模板
         <template>
             <div>
                 购物车
             </div>
         </template>
 
-#在router下的index.js中引进并配置路由规则
+在router下的index.js中引进并配置路由规则
         import Vue from 'vue'
         import VueRouter from 'vue-router'
 
@@ -1268,14 +1437,14 @@ export default {
             
         ]
 
-#main.js中配置路由：
+main.js中配置路由：
         new Vue({
             router,
             render: h => h(App)
         }).$mount('#app')
 
 
-#app.vue:写导航
+app.vue:写导航
 
     <router-link to="/index">  index  </router-link>
     <router-link to="/cart">  cart  </router-link>
@@ -1308,7 +1477,7 @@ export default {
     router.replace()
 ##### 声明式 ----> 使用router-link进行跳转路由
     <router-link :to=" " replace>
-扩展路由跳转方式：
+扩展路由跳转方式： router.replace（）替换
 
     router.replace（）替换
 
@@ -1346,6 +1515,7 @@ js方式进行参数绑定
 
 #### 动态路由--query传参
 1. 路由参数不需要添加内容 
+
 ![](img/query传参1.png)
 
 
@@ -1541,7 +1711,7 @@ configureWebpack:{
 <img src="./img/axios模块.png" height="200px">
 
 ##### axios请求封装原理
-<img src="./img/axios模块.png" height="200px">
+<img src="./img/axios请求封装原理.png" height="200px">
 <!-- ![alt util](img/axios请求封装原理.png) -->
 
 
