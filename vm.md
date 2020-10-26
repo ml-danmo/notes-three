@@ -13,8 +13,7 @@
     
     ##main.js中配置：
 
-        require("./mock")
-
+        require("./mock")"
     ##api/api.js利用axios发送数据
 
         // import axios from "axios";

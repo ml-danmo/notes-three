@@ -1771,3 +1771,56 @@ service.interceptors.response.use(function (response) {
 3. 在需要的地方引用调用请求
 <img src="./img/封装请求3.png" height="200px">
 <!-- ![alt 封装请求.png](img/封装请求3.png) -->
+
+## 动态组件 
+>让多个组件使用同一个挂载点，并动态切换，这就是动态组件。
+
+使用 is 特性来切换不同的组件
+```html
+<component :is="com"></component>
+```
+<img src="img/动态组件.png" width="300px">
+
+## keep-alive
+
+    在上一个demo中我们不停的切换两个标签页的内容时候，会发现在练习我们中选择好的内容，切换路由之后会恢复初始化。
+
+    也就是说之前的状态丢失。原因是每次切换路由的时候，Vue 都创建了一个新的 组件实例
+
+---
+    解决这个问题，我们可以用一个 <keep-alive> 元素将其路由出口包裹起来。
+
+    在切换过程中将状态保留在内存中，
+    
+    防止重复渲染DOM，减少加载时间及性能消耗，提高用户体验性
+<img src="img/keep-alive.png" width="300px">
+
+---
+## refs
+#### ref和$refs的使用
+
+    在Vue中一般很少会用到直接操作DOM，但不可避免有时候需要用到，
+    这时我们可以通过ref和$refs这两个来实现
+
+    ref 被用来给元素或子组件注册引用信息， 引用信息将会注册在父组件的 $refs 对象上，
+    如果是在普通的DOM元素上使用，引用指向的就是 DOM 元素，如果是在子组件上，引用就指向组件的实例。
+
+    $refs 是一个对象，持有已注册过 ref 的所有的子组件。
+---
+1.用在dom元素上
+```html
+可以获取DOM对象
+
+绑定： <p ref="demo">我是ref</p>
+
+获取： this.$refs.demo
+
+```
+2.用在组件上
+>ref绑定到组件上可以快速访问到组件实例，及其相关属性方法
+>><img src="img/ref1.png" width="300px">
+>获取子组件的data数据/方法：
+>><img src="img/ref2.png" width="300px">
+
+
+
