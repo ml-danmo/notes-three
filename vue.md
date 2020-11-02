@@ -1697,6 +1697,66 @@ configureWebpack:{
     redirect:"/index"    // 重定向  重新定位方向
 },
 ```
+
+## 路由守卫/导航守卫
+#### 导航守卫
+    vue项目中经常在路由跳转前做一些验证，比如登录验证，是网站中的普遍需求。
+#### 导航守卫-全局前置守卫
+    当一个导航触发时，全局前置守卫(在进入组件之前)按照创建顺序调用。
+
+    vue-router 提供的 router.beforeEach（(to，from，next)=>{}）
+    可以方便地实现全局前置导航守卫
+    
+    to：即将要进入的目标 路由对象
+
+    from: 当前导航正要离开的路由
+
+    next: 下一步执行
+
+#### 导航守卫-全局后置钩子
+
+    当一个导航触发时，全局后置钩子(在进入组件之后)调用。
+
+    vue-router 提供的 router.afterEach((to, from) => {})实现全局后置守卫
+
+    to：即将要进入的目标 路由对象
+
+    from: 当前导航正要离开的路由
+#### 导航守卫-路由独享的守卫
+    与全局前置守卫相比路由独享守卫只是对当前路由进行单一控制参数和全局前置守卫相同
+
+    在路由配置上直接定义 beforeEnter 进行路由独享守卫定义
+![](img/路由独享的守卫.png)
+
+#### 导航守卫-组件内的守卫
+    组件内守卫只会对当前组件生效。
+
+    beforeRouteEnter在 **进入** 组件前调用
+
+    beforeRouteLeave **离开** 路由之前
+
+#### 导航守卫-组件内的守卫beforeRouteEnter
+    在组件中使用beforeRouteEnter(to, from, next) {}来进行进入组建前的钩子
+<img src="img/beforeRouteEnter.png" width="500px">    
+
+#### 导航守卫-组件内的守卫beforeRouteLeave
+    在组件中使用beforeRouteLeave(to, from, next) {}来进行离开组件的钩子
+
+<img src="img/beforeRouteLeave.png" width="500px">    
+ 
+##### 路由知识点扩展---数据获取
+    进入某个路由后，需要从服务器获取数据。例如，在渲染用户信息时，你需要
+    从服务器获取用户的数据。我们可以通过两种方式来实现
+
+    导航完成之后获取：先完成导航，然后在接下来的组件生命周期钩子中获取数据
+
+    导航完成之前获取：导航完成前，在路由进入的守卫中获取数据，在数据获取成功后执行导航。
+    
+    从技术角度讲，两种方式都不错 —— 就看你想要的用户体验是哪种。
+
+
+
+
 # 封装工具库
 ##### 在src文件夹下创建一个util（工具文件夹）。把一些工具类的js文件进行统一管理
 <!-- ![alt util](img/util1.png) -->
@@ -1772,6 +1832,30 @@ service.interceptors.response.use(function (response) {
 <img src="./img/封装请求3.png" height="200px">
 <!-- ![alt 封装请求.png](img/封装请求3.png) -->
 
+## 代理跨域
+proxyTable解决跨域
+在vue.config.js中
+```js
+ proxy: {
+        '/api': {
+            target: 'http://localhost:3000/', //对应自己的接口
+            changeOrigin: true,
+            ws: true,
+            pathRewrite: {
+            '^/api': ''
+            }}
+ }
+
+```
+<img src="img/代理跨域.png" width="300px">
+    "http://www.weath.com.cn/data/cityinfo/101320101"
+<img src="img/代理1.png" width="300px">
+<img src="img/代理2.png" width="300px">
+
+封装url地址： 方便后期修改。
+<img src="img/封装url地址.png" width="300px">
+
+
 ## 动态组件 
 >让多个组件使用同一个挂载点，并动态切换，这就是动态组件。
 
@@ -1780,6 +1864,35 @@ service.interceptors.response.use(function (response) {
 <component :is="com"></component>
 ```
 <img src="img/动态组件.png" width="300px">
+
+```js
+<template>
+    <div>
+        <button @click="com='demoa'">a</button>
+        <button @click="com='demob'">b</button>
+        <button @click="com='democ'">c</button>
+        <component :is="com"></component>
+    </div>
+</template>
+
+<script>
+import demoa from "@/components/demoa.vue"
+import demob from "@/components/demob.vue"
+import democ from "@/components/democ.vue"
+export default {
+    components:{
+        demoa,
+        demob,
+        democ,
+    },
+    data() {
+        return {
+            com:"demoa"
+        }
+    },
+}
+
+```
 
 ## keep-alive
 
@@ -1794,6 +1907,17 @@ service.interceptors.response.use(function (response) {
     
     防止重复渲染DOM，减少加载时间及性能消耗，提高用户体验性
 <img src="img/keep-alive.png" width="300px">
+
+#### keep-alive 属性
+    在vue 2.1.0 版本之后，keep-alive新加入了两个属性: 
+    include(包含的组件缓存) 与 exclude(排除的组件不缓存，优先级大于include) 。
+<img src="img/alive 属性.png" width="300px">
+<img src="img/alive属性1.png" width="400px">
+
+#### keep-alive 的钩子函数
+    这两个生命周期函数一定是要在使用了keep-alive组件之上。
+    activated  类型：func      触发时机：keep-alive组件激活时使用；
+    deactivated  类型：func  触发时机：keep-alive组件停用时调用；
 
 ---
 ## refs
@@ -1815,12 +1939,90 @@ service.interceptors.response.use(function (response) {
 
 获取： this.$refs.demo
 
+
+示例：
+    <p ref="pp">我是ref  哈哈</p>
+    <button @click="fun()">点我让ref变色</button>
+    methods: {
+        fun(){
+            this.$refs.pp.style.color="hotpink"
+        }
+    },
 ```
 2.用在组件上
 >ref绑定到组件上可以快速访问到组件实例，及其相关属性方法
 >><img src="img/ref1.png" width="300px">
 >获取子组件的data数据/方法：
 >><img src="img/ref2.png" width="300px">
+
+```js
+子组件：
+    export default {
+        data() {
+            return {
+                zi:"sondata"
+            }
+        },
+    }
+
+父组件：
+    <demoa ref="re"/>        //调用子组件
+    <button @click="fun11()" >点我获取子组件的数据</button>
+
+    fun11(){
+        console.log(this.$refs.re.zi)       //sondata
+    }
+```
+
+## 自定义指令
+##### 自定义指令
+```js
+除了内置指令外， 用户自定义的指令
+局部指令定义：
+
+directives:{
+    自定义指令的名字：{
+        自定义指令钩子函数(el){
+            操作逻辑
+        }
+    }
+},
+
+```
+```html
+bind：绑定指令到元素上，只执行一次
+
+inserted：绑定了指令的元素插入到页面中展示时调用，基本上都是操作这个钩子函数
+
+update：所有组件节点更新时调用
+
+componentUpdated：指令所在组件的节点及其子节点全部更新完成后调用
+
+unbind：解除指令和元素的绑定，只执行一次
+```
+示例：
+```js
+<input type="text" v-xiaoming/>         //使用自定义指令
+<h1 v-xiaohong>自定义指令</h1>
+
+
+directives:{
+    xiaoming:{
+      inserted(el){
+          // 这个指令是让输入框在页面加载完毕之后自动获得焦点
+          el.focus()
+      }
+    },
+    xiaohong:{
+      inserted(el){
+          el.style.color="red"
+      }
+    }
+}
+```
+
+
+
 
 
 # VUEX
@@ -1854,12 +2056,12 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        },
-mutations: {
     },
-actions: {
+    mutations: {
     },
-modules: {
+    actions: {
+    },
+    modules: {
     }
 })
 
@@ -1926,7 +2128,7 @@ newtextobj(){
         三、 如果一个状态只在一个组件内使用一次或者使用了多次但是展示的形态相同，是可以不用getters
 
 ### 3.Mutations
-#### vuex--Mutations
+#### vuex--Mutations :修改数据
     mutations,里面装着一些改变数据方法的集合，就是把处理
     数据逻辑方法全部放在mutations里面（当触发事件的时候想
     改变state数据的时候使用mutations）
@@ -2048,3 +2250,48 @@ actions:{
         state.text += "sdgsg";
     }
 }
+
+
+#### vuex--表单处理
+    当在严格模式中使用 Vuex 时，在属于 Vuex 的 state 上使用 
+    v-model 会比较棘手。在用户输入时，v-model 会试图直接修改 state
+    数据。在严格模式中，由于这个修改不是在 mutation 函数中执行的, 这里会抛出一个错误。
+##### vuex--表单处理解决方式
+    Vuex 的思维解决，给 <input> 中绑定 value，然后侦听 input 或者 change 事件，在事件回调中调用 action。
+<img src="img/表单处理1.png" width="400px">
+
+    调用函数。
+<img src="img/表单处理2.png" width="300px">
+
+    创建actions调用mutations并接收数据
+<img src="img/表单处理3.png" width="300px">
+
+
+    使用mutations来进行修改
+<img src="img/表单处理4.png" width="300px">
+
+---
+
+### 兄弟组件传值----中央事件总线
+    1. 在src/下创建一个文件夹用来存放xxx.js文件在其中只创
+    建一个新的Vue实例，以后它就承担起了组件之间通信的桥梁
+    了，也就是中央事件总线。
+
+```js
+import Vue from "vue"
+export default new Vue()
+```
+    2. 创建一个A组件，引入事件总线的js文件，接着添加一个按
+    钮并绑定一个点击事件，进行自定义事件抛出
+<img src="img/中央事件总线1.png" width="300px">
+
+    3. 再创建一个B组件，引入eventBus事件总线，在mounted钩
+    子，监听了自定义事件,并把传递过来的字符串参数传递给了on监听器的回调函数
+    
+    $on:监听当前实例上的自定义事件
+<img src="img/中央事件总线2.png" width="300px">
+
+##### 总结
+    1、创建一个事件总线，例如demo中的eventBus，用它作为通信桥梁
+    2、在需要传值的组件中用bus.emit触发一个自定义事件，并传递参数(emit前加美元符)
+    3、在需要接收数据的组件中用bus.$on监听自定义事件，并在回调函数中处理传递过来的参数
