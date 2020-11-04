@@ -1713,6 +1713,8 @@ configureWebpack:{
 
     next: 下一步执行
 
+![](img/全局守卫1.png)
+
 #### 导航守卫-全局后置钩子
 
     当一个导航触发时，全局后置钩子(在进入组件之后)调用。
@@ -1722,6 +1724,7 @@ configureWebpack:{
     to：即将要进入的目标 路由对象
 
     from: 当前导航正要离开的路由
+![](img/全局守卫2.png)
 #### 导航守卫-路由独享的守卫
     与全局前置守卫相比路由独享守卫只是对当前路由进行单一控制参数和全局前置守卫相同
 
@@ -1741,6 +1744,8 @@ configureWebpack:{
 
 #### 导航守卫-组件内的守卫beforeRouteLeave
     在组件中使用beforeRouteLeave(to, from, next) {}来进行离开组件的钩子
+
+![](img/全局守卫3.png)
 
 <img src="img/beforeRouteLeave.png" width="500px">    
  
@@ -2295,3 +2300,110 @@ export default new Vue()
     1、创建一个事件总线，例如demo中的eventBus，用它作为通信桥梁
     2、在需要传值的组件中用bus.emit触发一个自定义事件，并传递参数(emit前加美元符)
     3、在需要接收数据的组件中用bus.$on监听自定义事件，并在回调函数中处理传递过来的参数
+
+## 打包上线
+#### 打包上线
+    npm run build
+    在项目下面会生成一个dist文件夹就是打包好的内容 运行其中的html文件即可
+1. 运行之后会发现白屏 在控制台会发现有报错
+2. 解决:修改资源路径为./
+```js
+在vue.config.js中配置：
+
+
+module.exports = {
+   
+    // 基本路径
+    publicPath: './', //部署应用包时的基本 URL
+    outputDir: 'dist', // 输出文件目录
+    assetsDir: '',//放置生成的静态资源 (js、css、img、fonts) 的 (相对于 outputDir 的) 目录
+    runtimeCompiler: false, //是否使用包含运行时编译器的 Vue 构建版本。设置为true可以使用template
+    productionSourceMap: false,//生产环境是否生成 sourceMap 文件
+    lintOnSave: true,
+    chainWebpack(config) {
+        config.resolve.alias
+        //     .set('style', resolve('public/style'))
+        config.output.filename('js/[name].[hash:16].js');//hash值设置
+        config.output.chunkFilename('js/[id].[hash:16].js');
+        // config.output.filename('css/[name].[hash:16].css');//hash值设置
+    },
+    configureWebpack: () => {
+    },
+    // css相关配置
+    css: {
+        // 是否使用css分离插件 ExtractTextPlugin
+        extract: true,
+        // 开启 CSS source maps?
+        sourceMap: false,
+        // css预设器配置项
+        loaderOptions: {},
+        // 启用 CSS modules for all css / pre-processor files.
+        modules: false
+    },
+    parallel: require('os').cpus().length > 1,//是否为 Babel 或 TypeScript 使用 thread-loader
+    // PWA 插件相关配置
+    // see https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-pwa
+    pwa: {},
+    // webpack-dev-server 相关配置
+    devServer: {
+        
+        open: process.platform === 'darwin',
+        host: '0.0.0.0',
+        port: 8888,
+        https: false,
+        hotOnly: false,
+        // 设置代理
+        proxy: {
+            '/api': {
+              target: 'http://localhost:3000/', //对应自己的接口
+              changeOrigin: true,
+              ws: true,
+              pathRewrite: {
+                '^/api': ''
+              }
+            }
+          }, 
+       
+    },
+    // 第三方插件配置
+    pluginOptions: {
+        // ...
+    }
+}
+```
+
+#### 设置路由模式
+    router-view中的内容显示不出来
+
+    需要关闭路由的history模式，因为当前模式需要后台配合。
+
+    nginx服务器配置try_files重定向
+
+![](img/设置路由模式.png)
+
+#### 打包优化
+    productionSourceMap是用来报错时定位到代码位置(就是.map文件 
+    作用：项目打包后，代码都是经过压缩加密的，如果运行时报错，输出
+    的错误信息无法准确得知是哪里的代码报错。 )配置为false取消配
+    置。可以减少构建时间，优化构建速度
+
+    productionSourceMap: process.env.NODE_ENV === 'development'
+
+    process.env.NODE_ENV是判断生产环境或开发环境。
+
+#### 打包优化
+    图片压缩
+
+    npm install --save babel-polyfill	
+
+    配置vue.config.js
+![](img/图片压缩.png)
+
+#### 自动忽略console.log语句
+    npm install terser-webpack-plugin --save
+
+    配置vue.config.js
+
+![](img/忽略console1.png)
+![](img/忽略console2.png)
+
