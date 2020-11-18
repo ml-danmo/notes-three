@@ -640,6 +640,7 @@ proxy:{
                "^/api（和上面一样）":"/"
         }
 } 
+3.并修改请求地址
 ```
 ##### 弹射
     刚才在解决跨域的时候配置文件隐藏过深非常麻烦。
@@ -663,3 +664,223 @@ proxy:{
 
 
     或者：把node_modules删除了  重新npm install
+
+## 路由
+    根据不同的url 来切换对应的组件
+
+    实现spa（单页面应用）应用：
+    整个项目只有一个完整页面
+    页面切换不会刷新页面（不会感觉页面的闪烁 更加贴近原声应用的体验）
+#### 路由-分类
+    1. React-Router：提供了一些router的核心API，
+    包括Router, Route, Switch等，
+    但是它没有提供 DOM 操作进行跳转的API。
+
+    ****2. React-Router-DOM：提供了 BrowserRouter, Route, Link等 API,
+    我们可以通过 DOM 的事件控制路由。
+    例如点击一个按钮进行跳转，大多数情况下我们是这种情况，
+    所以在开发过程中，我们更多是使用React-Router-DOM。
+#### 路由模式-HashRouter 和 BrowserRouter
+    HashRouter （hash模式）
+    url中会有个#，例如localhost:3000/#，HashRouter就会出现这种情况，
+    它是通过hash值来对路由进行控制。如果你使用HashRouter，你的路由就会默认有这个#。
+    刷新不会丢失
+
+    BrowserRouter（历史记录模式 ） 
+    是通过历史记录api来进行路由的切换的很多情况下
+    我们则不是这种情况，我们不需要这个#，因为它看起来很怪，
+    这时我们就需要用到BrowserRouter。
+    刷新会丢失404（上线中会出现问题  本地开发中不会）
+#### 路由-link与switch
+    Link 主要API是to，to可以接受string或者一个object，来控制url。
+
+    NavLink 它可以为当前选中的路由设置类名、样式以及回调函数等
+    to属性跳转路径*activeClassName*当元素处于活动状态时应用于元素的样式
+
+#### 路由基本使用
+```js
+路由最基本的职责就是当页面的访问地址与 Route 上的 path 匹配时，就渲染出对应的 UI 界面。
+
+1.下载路由模块
+npm install --save react-router-dom
+
+2.在index.js引用路由模块 
+import { BrowserRouter} from 'react-router-dom';
+
+ReactDOM.render(
+  <BrowserRouter>
+    <Index />
+  </BrowserRouter>,
+  document.getElementById('root')
+);
+
+3.在index.js使用路由模式包裹跟组件
+
+4.在home.js中引用路由出口
+
+import {Route} from "react-router-dom"
+
+5.配置 
+<Route path="/路径" component={组件}/>
+
+```
+router->index------(配置路由)
+```js
+import React, { Component } from 'react'
+import {Route, Switch, Redirect } from 'react-router-dom'  /* 引入路由规则兼出口 */
+
+import Home from '../views/home'     /* 引入各组件 */
+import About from '../views/about'
+import News from '../views/news'
+import Wode from '../views/wode'
+import No from '../views/no'
+import Bottombar from '../components/bottombar'
+
+export default class index extends Component {
+    render() {
+        return (
+            <div>
+                <Bottombar/>
+
+                {/* 配置路由规则 */}
+                <Switch>  {/* switch唯一渲染  当匹配到指定的路由的时候就会停止向下渲染 */}
+                    {/* <Route exact path="/" component={Home}/> */}
+                    <Redirect from="/" to="/home" exact/>    {/* exact代表当前路由path的路径采用精确匹配 */}
+                    <Route  path="/home" component={Home}/>
+                    <Route path="/about" component={About}/>
+                    <Route path="/news" component={News}/>
+                    <Route path="/wode/:ping" component={Wode}/>
+                    <Route  component={No}/>                      {/* 404页面 */}
+                </Switch>
+            </div>
+        )
+    }
+}
+```
+##### 路由导航
+    使用Link组件即可 to属性就是地址
+```js
+import React, { Component } from 'react'
+import { Link, NavLink, withRouter } from 'react-router-dom'
+import './bottombar.css'
+
+ class bottombar extends Component {
+    fun(path){                        /* 编程式导航*/
+        this.props.history.push(path)
+    }
+    render() {
+        return (
+            <div>
+            /* 声明式导航<Link> */
+               <Link to="/home">home</Link> |    
+               <Link to="/about">about</Link> | 
+               <Link to="/news">news</Link> | 
+               <Link to="/wode">wode</Link> 
+               <hr/>
+            /* 声明式导航<NavLink> */
+               <NavLink to="/home" activeClassName="navS">home</NavLink> | 
+               <NavLink to="/about" activeClassName="navS">about</NavLink> | 
+               <NavLink to="/news/era" activeClassName="navS">news</NavLink> | 
+               <NavLink to="/wode/我是params声明式" activeClassName="navS">wode</NavLink> 
+               <hr/>
+            /* 编程式导航*/
+               <button onClick={this.fun.bind(this,"/home")}>home</button>
+               <button onClick={this.fun.bind(this,"/about")}>about</button>
+               <button onClick={this.fun.bind(this,"/news")}>news</button>
+               <button onClick={this.fun.bind(this,"/wode")}>wode</button>
+            </div>
+        )
+    }
+}
+export default withRouter(bottombar)  
+```
+
+##### 路由导航--NavLink
+```js
+导入NavLink：import { NavLink } from 'react-router-dom'
+
+如果不喜欢默认的类名active 可以手动设置选中Class方便样式设置：
+
+<NavLink to="/home" activeClassName="navS">home</NavLink>
+
+**注意：如果在vscode的终端中启动项目可能会无效 在外部cmd中启动
+```
+##### exact 属性
+    exact代表当前路由path的路径采用精确匹配，
+    比如说Home的path如果不加上exact,那么path="/about"将会匹配他自己与path="/“这两个，
+    所以一般path=”/"这个路由一般会加上exact，
+    另外需要注意一点的是嵌套路由不要加exact属性，如果父级路由加上，
+    这里例如topics加上该属性，他下面的子路由将不会生效，因为外层强制匹配了。
+><img src="img1/exact.png" height="60px">
+
+##### 路由--404页面
+    有的时候用户可能会错误修改相关url 但是并没有相关路由 
+    解决方式设置404路由组件 但是有问题不管到那个页面都会有这个404路由组件
+##### \<Switch\>
+    为了解决route的唯一渲染，它是为了保证路由只渲染一个路径。
+
+    <Switch>是唯一的，因为它仅仅只会渲染一个路径，当它匹配完一个路径后，就会停止渲染了。
+
+##### 路由--重定向
+```js
+导入Redirect:
+    import { BrowserRouter,Route,Link,NavLink,Redirect } from 'react-router-dom'
+
+定义重定向路径:  <Redirect from="/" to="/demoa" exact/>
+```
+><img src="img1/重定向.png" height="260px">
+
+##### 二级路由-------------(在一级路由的页面中配置)
+    在子页面中引用路由模块:
+    import {Route,Link} from 'react-router-dom';
+
+    2.设置相关规则 与路由导航
+><img src="img1/二级路由.png" height="210px">
+
+
+##### 路由--js跳转
+    replace() 替换当前路径
+
+    goBack()后退
+
+    goForward()前进
+
+>push方法在路由页面中跳转 this.props.history.push("/xxxx")
+><img src="img1/js跳转.png" height="250px">
+
+
+##### 路由--withRouter
+    withRouter作用是让不是路由切换的组件也具有路由切换组件的三个属性(location match history)
+
+    withTouter 让不是理由所跳转的页面也具有路由的三个属性
+
+#### 路由---传参params方式
+><img src="img1/params.png" height="250px">
+
+    优势 ： 刷新地址栏，参数依然存在
+
+    缺点 ： 只能传字符串，并且，如果传的值太多的话，url会变得长而丑陋。
+
+#### 路由---传参state
+```js
+在Link中设置发送的数据:
+    <Link to={{ pathname : '/d' , state: { name : 'sunny' }}}>  点我去d  </Link>
+
+在需要接受的路由组建中接受:
+    console.log(this.props.location. state.name)
+
+```
+    优势：传参优雅地址栏不显示传递的数据，传递参数可传对象；
+
+    缺点：刷新地址栏，参数丢失
+#### 路由render渲染写法
+```js
+修改Route 里面的组件调用方式为:
+render={(props)=>{return <组件/>}}
+render调用一个函数那么我们就可以决定什么时候渲染他 
+同时传入props那么就可以在路由组件中使用history: {…}, location: {…}, match: {…}这几个对象
+```
+><img src="img1/路由render渲染写法.png" height="80px">
+
+###### 路由render渲染写法传递数据
+><img src="img1/renderprops传值.png" height="180px">
