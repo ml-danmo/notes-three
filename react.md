@@ -1,6 +1,6 @@
 # React
 
-#####npm 改为淘宝下载东西：
+##### npm 改为淘宝下载东西：
 ```js
 全局安装nrm: npm i -g nrm
 
@@ -884,3 +884,56 @@ render调用一个函数那么我们就可以决定什么时候渲染他
 
 ###### 路由render渲染写法传递数据
 ><img src="img1/renderprops传值.png" height="180px">
+
+### redux
+##### redux是什么
+    Redux是为javascript应用程序提供一个状态管理工具
+
+    集中的管理react中多个组件的状态
+
+    redux是专门作状态管理的js库（不是react插件库可以用在其他js框架中例如vue，但是基本用在react中）
+##### 什么时候用redux
+    需求场景：
+        某个组件的状态需要共享的时候
+        某个组件的状态需要在任何地方都可以拿到
+        一个组件需要改变全局状态
+        一个组件需要改变另一个组件的状态
+##### redux三大原则
+    单一数据源:整个应用的 state 被储存在一棵 object tree 中，
+    并且这个 object tree 只存在于唯一一个 store 中
+
+    State 是只读的:唯一改变 state 的方法就是触发 action，
+    action 是一个用于描述已发生事件的普通对象。
+
+    使用纯函数来执行修改:为了描述 action 如何改变 state tree ，
+    你需要编写 reducers(一些纯函数，它接收先前的 state 和 action，)
+##### redux常用概念
+    Store：管理着整个应用的状态，可以通过getState()来重新获得最新的状态(state)。
+
+    Action：是唯一可以改变状态(state)的方式，服务器的各种推送、用户自己做的一些操作，
+    最终都会转换成一个个的Action，而且这些Action就是修改的动作，可以通过dispatch()方法来进行调用
+
+    Reducer：Reducer 是一个纯函数，它接受 Action 和当前 State 作为参数，
+    返回一个新的 State。（纯函数就是只要传入相同的参数，每次都应返回相同的结果）。
+##### redux常用方法
+    createStore（）作用：创建一个Redux store来存放应用中所有的state，一个应用只能有个store。函数返回store对象。
+
+    getState()作用：获取数据
+
+    dispatch()分发action，这是改变state的唯一方法。
+
+    subscribe()添加一个变化监听器，每当改变store的时候就会执行
+
+##### 使用
+    下载：npm install --save redux
+
+    建议：在项目中创建一个sotre文件夹用来保存与redux相关的内容
+##### redux初体验
+><img src="img1/redux.png" height="280px">
+###### redux组件中使用
+>读取数据
+><img src="img1/redux1.png" height="280px">
+
+>redux 修改数据
+>在reducer中添加action任务
+><img src="img1/redux2.png" height="280px">
